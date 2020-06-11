@@ -1,0 +1,151 @@
+
+get_All_Action:
+    path:     /getAllActions
+    defaults: { _controller: DonationBundle:Action:getAllActions }
+
+Add_Action_mobile:
+    path:     /add/{name}/{date}/{location}/{nbv}/{description}/{image}
+    defaults: { _controller: DonationBundle:Action:addMobile }
+
+Delete_Action_mobile:
+    path:     /deleteActionMobile/{id}
+    defaults: { _controller: DonationBundle:Action:deleteActionMobile }
+
+get_All_Association:
+    path:     /getAllAssociations
+    defaults: { _controller: DonationBundle:Association:getAllAssociations }
+
+Add_Association_mobile:
+    path:     /addAsso/{name}/{objectif}/{email}/{password}/{address}/{type}/{description}/{image}
+    defaults: { _controller: DonationBundle:Association:addMobileAssociation }
+
+Delete_Association_mobile:
+    path:     /deleteAssociationMobile/{id}
+    defaults: { _controller: DonationBundle:Association:deleteAssociationMobile }
+
+edit_Association_mobile:
+    path:     /editAsso/{id}/{name}/{objectif}/{email}/{password}/{address}/{type}/{description}/{image}
+    defaults: { _controller: DonationBundle:Association:editMobileAssociation }
+
+get_byId_mobile:
+    path:     /getbyIdMobile/{id}
+    defaults: { _controller: DonationBundle:Association:getbyIdMobile }
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function getAllActionsAction(){
+        $result=$this->getDoctrine()->getManager()->getRepository("DonationBundle:Action")->findAll();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $actions=$serializer->normalize($result);
+        return new JsonResponse($actions);
+    }
+
+    public function addMobileAction($name,$date,$location,$nbv,$description,$image)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $Action = new Action();
+        $Action->setNameAction($name);
+        $Action->setDateAction($date);
+        $Action->setLocationAction($location);
+        $Action->setNbvAction($nbv);
+        $Action->setImageName($image);
+        $Action->setDescription($description);
+        $em->persist($Action);
+        $em->flush();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($Action);
+        return new JsonResponse($formatted);
+
+    }
+    public function deleteActionMobileAction($id)
+    {
+        $em=$this->getDoctrine()->getManager();
+        $action=$em->getRepository(Action::class)->find($id);
+        $em->remove($action);
+        $em->flush();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($action);
+        return new JsonResponse($formatted);
+    }
+
+
+---------------------------------------
+public function getAllAssociationsAction(){
+        $result=$this->getDoctrine()->getManager()->getRepository("DonationBundle:Association")->findAll();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $actions=$serializer->normalize($result);
+        return new JsonResponse($actions);
+    }
+    public function addMobileAssociationAction($name,$objectif,$email,$password,$address,$type,$description,$image)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $Association = new Association();
+        $Association->setNomAssociation($name);
+        $Association->setObjectifAssociation($objectif);
+        $Association->setEmailAssociation($email);
+        $Association->setPasswordAssociation($password);
+        $Association->setAddressAssociation($address);
+        $Association->setTypeAssociation($type);
+        $Association->setImageName($image);
+        $Association->setDescriptionAssociation($description);
+        $Association->setDateInscrit(new \DateTime());
+        $em->persist($Association);
+        $em->flush();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($Association);
+        return new JsonResponse($formatted);
+
+    }
+    public function deleteAssociationMobileAction($id)
+    {
+        $em=$this->getDoctrine()->getManager();
+        $association=$em->getRepository(Association::class)->find($id);
+        $em->remove($association);
+        $em->flush();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($association);
+        return new JsonResponse($formatted);
+    }
+    public function editMobileAssociationAction($id,$name,$objectif,$email,$password,$address,$type,$description,$image)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $Association =$em->getRepository(Association::class)->find($id);
+        $Association->setNomAssociation($name);
+        $Association->setObjectifAssociation($objectif);
+        $Association->setEmailAssociation($email);
+        $Association->setPasswordAssociation($password);
+        $Association->setAddressAssociation($address);
+        $Association->setTypeAssociation($type);
+        $Association->setImageName($image);
+        $Association->setDescriptionAssociation($description);
+        $Association->setDateInscrit(new \DateTime());
+        $em->flush();
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($Association);
+        return new JsonResponse($formatted);
+
+    }
+    public function getbyIdMobileAction($id)
+    {
+        $em=$this->getDoctrine()->getManager();
+        $association=$em->getRepository(Association::class)->find($id);
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($association);
+        return new JsonResponse($formatted);
+
+    }
